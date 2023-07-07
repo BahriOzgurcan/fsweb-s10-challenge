@@ -1,29 +1,50 @@
-const s10chLocalStorageKey = "s10ch";
+import { NOT_EKLE, NOT_SIL } from "./actions";
+
+ export const s10chLocalStorageKey = "s10ch";
 
 const baslangicDegerleri = {
-  notlar: [
-    {
-      id: "75g1IyB8JLehAr0Lr5v3p",
-      date: "Fri Feb 03 2023 09:40:27 GMT+0300 (GMT+03:00)",
-      body: "Bugün hava çok güzel!|En iyi arkadaşımın en iyi arkadaşı olduğumu öğrendim :)|Kedim iyileşti!",
-    },
-  ],
+  notlar: [],
 };
 
-function localStorageStateYaz(key, data) {
+export function localStorageStateYaz(key, data) {
   localStorage.setItem(key, JSON.stringify(data));
 }
 
-function localStorageStateOku(key) {
+export function localStorageStateOku(key) {
   return JSON.parse(localStorage.getItem(key));
 }
 
-function baslangicNotlariniGetir(key) {
+export function baslangicNotlariniGetir(key) {
   const eskiNotlar = localStorage.getItem(key);
 
   if (eskiNotlar) {
     return localStorageStateOku(key);
   } else {
-    return baslangicDegerleri
+    return null
   }
 }
+
+const reducer = (state = baslangicDegerleri, action) => {
+  switch (action.type) {
+    case NOT_EKLE:
+      let newState = {
+        ...state,
+        notlar: [...state.notlar, action.payload],
+      };
+      localStorageStateYaz(s10chLocalStorageKey, state.notlar);
+      console.log(state)
+      return newState;
+    case NOT_SIL:
+      let newDeletedState = {
+        ...state,
+        notlar: state.notlar.filter((item) => item.id !== action.payload),
+      };
+      localStorageStateYaz(s10chLocalStorageKey, state.notlar);
+      console.log(state.notlar);
+      return newDeletedState;
+    default:
+      return state;
+  }
+};
+
+export default reducer;

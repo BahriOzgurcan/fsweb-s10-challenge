@@ -1,10 +1,16 @@
 import React from "react";
 import { formatDistanceToNow } from "date-fns";
 import { tr } from "date-fns/locale";
+import { useDispatch } from "react-redux";
+import { notSilAPI } from "../actions";
+import { nanoid } from "nanoid";
 
-export default function Post({ item }) {
+export default function Post({ item, id }) {
+
+const dispatch = useDispatch();
 
   function handleSil() {
+    dispatch(notSilAPI(id));
     // burada ilgili eylemi dispatch edin
     // sonra toast mesajı gösterin
   }
@@ -19,7 +25,7 @@ export default function Post({ item }) {
       </h1>
 
       {item.body.split("|").map((li) => (
-        <p className="mt-2" key={li}>
+        <p className="mt-2" key={nanoid()}>
           - {li}
         </p>
       ))}
